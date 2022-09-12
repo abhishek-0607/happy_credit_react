@@ -63,6 +63,7 @@ export const Posts = () => {
             <Postitems
               title={e.title != null ? e.title.slice(0, 40) : ""}
               body={e.body != null ? e.body.slice(0, 85) : ""}
+              userId={e.userId}
             />
           </div>
         ))}
