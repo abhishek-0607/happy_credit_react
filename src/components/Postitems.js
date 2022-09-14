@@ -21,7 +21,7 @@ export const Postitems = (props) => {
             target="norerror"
             className="btn btn-sm btn-dark"
           >
-            Read more...
+            View User
           </button>
         </div>
       </div>
