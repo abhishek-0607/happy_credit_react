@@ -8,15 +8,11 @@ export const Posts = () => {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    getPosts(page);
-  }, [page]);
-
-  useEffect(() => {
-    searchPosts(text);
-  }, [text]);
+    searchPosts(text, page);
+  }, [text, page]);
   const getPosts = async (page) => {
     const res = await fetch(
-      `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=50`
+      `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`
     );
     console.log("page", page);
     const data = await res.json();
@@ -24,14 +20,19 @@ export const Posts = () => {
     setPosts(data);
     setItems(100);
   };
-  const searchPosts = async (text) => {
-    setPage(1);
-    console.log("search post called");
-    const res = await fetch(
-      `https://jsonplaceholder.typicode.com/posts?search=${text}&_page=1&_limit=50`
-    );
-    const data = await res.json();
-    console.log(data);
+  const searchPosts = async (text, page) => {
+    if (text.length >= 3) {
+      setPage(1);
+      console.log("search post called", page);
+      const res = await fetch(
+        `https://jsonplaceholder.typicode.com/posts?q=${text}`
+      );
+      const data = await res.json();
+      console.log(data);
+      setPosts(data);
+    } else {
+      getPosts(page);
+    }
   };
   return (
     <div className="container my-3">
@@ -61,8 +62,8 @@ export const Posts = () => {
         {posts.map((e, i) => (
           <div className="col-md-4" key={e.id}>
             <Postitems
-              title={e.title != null ? e.title.slice(0, 40) : ""}
-              body={e.body != null ? e.body.slice(0, 85) : ""}
+              title={e.title != null ? e.title : ""}
+              body={e.body != null ? e.body.slice(0, 120) : ""}
               userId={e.userId}
             />
           </div>
@@ -72,7 +73,7 @@ export const Posts = () => {
         Prev
       </button>
       <button
-        disabled={page + 1 > Math.ceil(items / 50)}
+        disabled={page + 1 > Math.ceil(items / 10)}
         onClick={() => setPage(page + 1)}
       >
         Next
